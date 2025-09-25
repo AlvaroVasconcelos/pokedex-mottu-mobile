@@ -10,20 +10,42 @@ class ListPokemonPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ListPokemonController>();
-    return Material(
-      child: Obx(
-        () => _buildPokemonList(controller),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Pokédex'),
+        centerTitle: true,
       ),
-    );
-  }
-
-  Widget _buildPokemonList(ListPokemonController controller) {
-    return ListView.builder(
-      itemCount: controller.pokemons.length,
-      itemBuilder: (context, index) {
-        final pokemon = controller.pokemons[index];
-        return PokemonTile(pokemon: pokemon);
-      },
+      body: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width,
+            child: TextFormField(
+              onChanged: (name) {
+                if (name.isNotEmpty) {
+                  controller.searchPokemons(name);
+                } else {
+                  controller.fetchPokemons();
+                }
+              },
+            ),
+          ),
+          Obx(
+            () {
+              return Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.pokemons.length,
+                  itemBuilder: (context, index) {
+                    final pokemon = controller.pokemons[index];
+                    return PokemonTile(pokemon: pokemon);
+                  },
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
