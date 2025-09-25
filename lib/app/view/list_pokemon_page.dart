@@ -4,12 +4,36 @@ import 'package:get/get.dart';
 import '../controller/list_pokemon_controller.dart';
 import 'widgets/pokemon_tile.dart';
 
-class ListPokemonPage extends StatelessWidget {
+class ListPokemonPage extends StatefulWidget {
   const ListPokemonPage({super.key});
 
   @override
+  State<ListPokemonPage> createState() => _ListPokemonPageState();
+}
+
+class _ListPokemonPageState extends State<ListPokemonPage> {
+  final ScrollController _scrollController = ScrollController();
+  final ListPokemonController controller = Get.find<ListPokemonController>();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        controller.loadMorePokemons();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final controller = Get.find<ListPokemonController>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pokédex'),
@@ -17,32 +41,45 @@ class ListPokemonPage extends StatelessWidget {
       ),
       body: Column(
         children: [
+          const SizedBox(
+            height: 20,
+          ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.1,
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width * 0.98,
             child: TextFormField(
-              onChanged: (name) {
-                if (name.isNotEmpty) {
-                  controller.searchPokemons(name);
-                } else {
-                  controller.fetchPokemons();
-                }
-              },
+              onChanged: controller.searchPokemons,
+              decoration: InputDecoration(
+                hintText: 'Search Pokémon',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: const BorderSide(color: Colors.grey),
+                ),
+              ),
             ),
           ),
-          Obx(
-            () {
-              return Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: controller.pokemons.length,
-                  itemBuilder: (context, index) {
-                    final pokemon = controller.pokemons[index];
-                    return PokemonTile(pokemon: pokemon);
-                  },
-                ),
+          Expanded(
+            child: Obx(() {
+              if (controller.pokemons.isEmpty && controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return ListView.builder(
+                controller: _scrollController,
+                itemCount: controller.pokemons.length + 1,
+                itemBuilder: (context, index) {
+                  if (index < controller.pokemons.length) {
+                    return PokemonTile(pokemon: controller.pokemons[index]);
+                  } else {
+                    return Obx(() {
+                      return controller.isLoading.value
+                          ? const Center(child: CircularProgressIndicator())
+                          : const SizedBox.shrink();
+                    });
+                  }
+                },
               );
-            },
+            }),
           ),
         ],
       ),
