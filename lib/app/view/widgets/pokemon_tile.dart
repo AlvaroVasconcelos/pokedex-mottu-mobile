@@ -18,31 +18,33 @@ class _PokemonTileState extends State<PokemonTile> {
   @override
   void initState() {
     super.initState();
-    controller.fetchPokemonByName(widget.pokemon.name);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.fetchPokemonDetail(widget.pokemon.name);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Center(
-        child: Obx(
-          () {
-            return ListTile(
-              onTap: () {
-                Get.toNamed(
-                  '/detail',
-                  arguments: widget.pokemon.name,
-                );
-              },
-              title: Text(widget.pokemon.name),
-              leading: CircleAvatar(
+        child: ListTile(
+          onTap: () {
+            Get.toNamed(
+              '/detail',
+              arguments: widget.pokemon.name,
+            );
+          },
+          title: Text(widget.pokemon.name),
+          leading: Obx(
+            () {
+              return CircleAvatar(
                 backgroundImage: NetworkImage(
                   controller.pokemon.value?.sprites?.frontDefault ??
                       'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png',
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
