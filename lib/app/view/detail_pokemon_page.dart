@@ -16,7 +16,7 @@ class _DetailPokemonPageState extends State<DetailPokemonPage> {
   @override
   void initState() {
     super.initState();
-    controller.fetchPokemonByName(Get.arguments as String);
+    controller.fetchPokemonDetail(Get.arguments as String);
   }
 
   @override
