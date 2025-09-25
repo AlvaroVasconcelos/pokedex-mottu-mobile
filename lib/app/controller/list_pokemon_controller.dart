@@ -20,7 +20,14 @@ class ListPokemonController extends GetxController {
   }
 
   Future<void> _performFetchPokemons() async {
-    final response = await repository.getAllPokemons();
+    final response = await repository.fetchPokemons();
     pokemons.assignAll(response);
+  }
+
+  Future<void> searchPokemons(String name) async {
+    final filteredPokemons = pokemons
+        .where((pokemon) => pokemon.name.toLowerCase().contains(name))
+        .toList();
+    pokemons.assignAll(filteredPokemons);
   }
 }

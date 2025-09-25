@@ -608,15 +608,16 @@ class Crystal {
   });
 
   factory Crystal.fromMap(dynamic json) {
+    final map = json as Map<String, dynamic>;
     return Crystal(
-      backDefault: json['back_default'] as String,
-      backShiny: json['back_shiny'] as String,
-      backShinyTransparent: json['back_shiny_transparent'] as String,
-      backTransparent: json['back_transparent'] as String,
-      frontDefault: json['front_default'] as String,
-      frontShiny: json['front_shiny'] as String,
-      frontShinyTransparent: json['front_shiny_transparent'] as String,
-      frontTransparent: json['front_transparent'] as String,
+      backDefault: map['back_default'] as String,
+      backShiny: map['back_shiny'] as String,
+      backShinyTransparent: map['back_shiny_transparent'] as String,
+      backTransparent: map['back_transparent'] as String,
+      frontDefault: map['front_default'] as String,
+      frontShiny: map['front_shiny'] as String,
+      frontShinyTransparent: map['front_shiny_transparent'] as String,
+      frontTransparent: map['front_transparent'] as String,
     );
   }
   final String backDefault;
@@ -712,50 +713,19 @@ class Gold {
       };
 }
 
-class GenerationIii {
-  GenerationIii({
-    required this.emerald,
-    required this.fireredLeafgreen,
-    required this.rubySapphire,
-  });
-
-  factory GenerationIii.fromMap(dynamic json) => GenerationIii(
-        emerald: OfficialArtwork.fromMap(json['emerald']),
-        fireredLeafgreen: Gold.fromMap(json['firered-leafgreen']),
-        rubySapphire: Gold.fromMap(json['ruby-sapphire']),
-      );
-  final OfficialArtwork emerald;
-  final Gold fireredLeafgreen;
-  final Gold rubySapphire;
-
-  GenerationIii copyWith({
-    OfficialArtwork? emerald,
-    Gold? fireredLeafgreen,
-    Gold? rubySapphire,
-  }) =>
-      GenerationIii(
-        emerald: emerald ?? this.emerald,
-        fireredLeafgreen: fireredLeafgreen ?? this.fireredLeafgreen,
-        rubySapphire: rubySapphire ?? this.rubySapphire,
-      );
-
-  Map<String, dynamic> toMap() => {
-        'emerald': emerald.toMap(),
-        'firered-leafgreen': fireredLeafgreen.toMap(),
-        'ruby-sapphire': rubySapphire.toMap(),
-      };
-}
-
 class OfficialArtwork {
   OfficialArtwork({
     required this.frontDefault,
     required this.frontShiny,
   });
 
-  factory OfficialArtwork.fromMap(dynamic json) => OfficialArtwork(
-        frontDefault: json['front_default'] as String,
-        frontShiny: json['front_shiny'] as String,
-      );
+  factory OfficialArtwork.fromMap(dynamic json) {
+    final map = json as Map<String, dynamic>;
+    return OfficialArtwork(
+      frontDefault: map['front_default'] as String,
+      frontShiny: map['front_shiny'] as String,
+    );
+  }
   final String frontDefault;
   final String frontShiny;
 
@@ -774,28 +744,6 @@ class OfficialArtwork {
       };
 }
 
-class GenerationVii {
-  GenerationVii({
-    required this.icons,
-  });
-
-  factory GenerationVii.fromMap(dynamic json) => GenerationVii(
-        icons: DreamWorld.fromMap(json['icons']),
-      );
-  final DreamWorld icons;
-
-  GenerationVii copyWith({
-    DreamWorld? icons,
-  }) =>
-      GenerationVii(
-        icons: icons ?? this.icons,
-      );
-
-  Map<String, dynamic> toMap() => {
-        'icons': icons.toMap(),
-      };
-}
-
 class DreamWorld {
   DreamWorld({
     required this.frontDefault,
@@ -803,9 +751,10 @@ class DreamWorld {
   });
 
   factory DreamWorld.fromMap(dynamic json) {
+    final map = json as Map<String, dynamic>;
     return DreamWorld(
-      frontDefault: json['front_default'] as String,
-      frontFemale: json['front_female'],
+      frontDefault: map['front_default'] as String,
+      frontFemale: map['front_female'],
     );
   }
   final String frontDefault;
@@ -823,28 +772,6 @@ class DreamWorld {
   Map<String, dynamic> toMap() => {
         'front_default': frontDefault,
         'front_female': frontFemale,
-      };
-}
-
-class GenerationViii {
-  GenerationViii({
-    required this.icons,
-  });
-
-  factory GenerationViii.fromMap(Map<String, dynamic> json) => GenerationViii(
-        icons: DreamWorld.fromMap(json['icons']),
-      );
-  final DreamWorld icons;
-
-  GenerationViii copyWith({
-    DreamWorld? icons,
-  }) =>
-      GenerationViii(
-        icons: icons ?? this.icons,
-      );
-
-  Map<String, dynamic> toMap() => {
-        'icons': icons.toMap(),
       };
 }
 
