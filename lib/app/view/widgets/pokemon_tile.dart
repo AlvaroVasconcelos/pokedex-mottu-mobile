@@ -31,7 +31,7 @@ class _PokemonTileState extends State<PokemonTile> {
               onTap: () {
                 Get.toNamed(
                   '/detail',
-                  arguments: widget.pokemon,
+                  arguments: widget.pokemon.name,
                 );
               },
               title: Text(widget.pokemon.name),
