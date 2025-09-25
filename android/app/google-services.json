@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "915358948907",
+    "project_id": "im-mottu-mobile-2b9bc",
+    "storage_bucket": "im-mottu-mobile-2b9bc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915358948907:android:24591f56bd992e2aaf946e",
+        "android_client_info": {
+          "package_name": "br.com.mottu.mottu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe0cHJsaFwHDP0IBbMDBmMSc7tWp6EC7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915358948907:android:eb2e55d7cdcddb2daf946e",
+        "android_client_info": {
+          "package_name": "br.com.mottu.mottu.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe0cHJsaFwHDP0IBbMDBmMSc7tWp6EC7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
