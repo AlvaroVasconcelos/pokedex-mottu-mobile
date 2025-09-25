@@ -8,10 +8,24 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:mottu/firebase_options.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/data/connectivity_service.dart';
 import 'app/data/i_pokemon_repository.dart';
 import 'app/data/pokemon_repository.dart';
+
+class _AppLifecycleObserver extends WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.clear();
+      });
+    }
+  }
+}
+
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +42,8 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
     ..put(initHttpClient())
     ..put(ConnectivityService())
     ..put<IPokemonRepository>(PokemonRepository(Get.find<Dio>()));
+  final observer = _AppLifecycleObserver();
+  WidgetsBinding.instance.addObserver(observer);
   runApp(await builder());
 }
 
