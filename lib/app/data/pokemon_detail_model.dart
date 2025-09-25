@@ -2,7 +2,6 @@ class PokemonDetailModel {
   PokemonDetailModel({
     required this.abilities,
     required this.baseExperience,
-    required this.cries,
     required this.forms,
     required this.gameIndices,
     required this.height,
@@ -23,25 +22,24 @@ class PokemonDetailModel {
   });
 
   final List<Ability> abilities;
-  final int baseExperience;
-  final Cries cries;
+  final int? baseExperience;
   final List<Species> forms;
   final List<GameIndex> gameIndices;
-  final int height;
+  final int? height;
   final List<HeldItem> heldItems;
-  final int id;
-  final bool isDefault;
-  final String locationAreaEncounters;
+  final int? id;
+  final bool? isDefault;
+  final String? locationAreaEncounters;
   final List<Move> moves;
-  final String name;
-  final int order;
+  final String? name;
+  final int? order;
   final List<PastAbility> pastAbilities;
   final List<dynamic> pastTypes;
   final Species? species;
   final Sprites? sprites;
   final List<Stat> stats;
   final List<Type> types;
-  final int weight;
+  final int? weight;
 
   PokemonDetailModel copyWith({
     List<Ability>? abilities,
@@ -68,7 +66,6 @@ class PokemonDetailModel {
       PokemonDetailModel(
         abilities: abilities ?? this.abilities,
         baseExperience: baseExperience ?? this.baseExperience,
-        cries: cries ?? this.cries,
         forms: forms ?? this.forms,
         gameIndices: gameIndices ?? this.gameIndices,
         height: height ?? this.height,
