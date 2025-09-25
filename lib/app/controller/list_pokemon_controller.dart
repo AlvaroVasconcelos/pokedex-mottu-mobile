@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:get/get.dart';
+
 import '../data/i_pokemon_repository.dart';
 import '../data/pokemon_model.dart';
 
@@ -8,26 +10,62 @@ class ListPokemonController extends GetxController {
   final IPokemonRepository repository;
 
   final pokemons = <PokemonModel>[].obs;
-
+  int offset = 0;
+  final isLoading = false.obs;
+  Timer? _debounce;
   @override
   void onInit() {
     fetchPokemons();
     super.onInit();
   }
 
-  Future<void> fetchPokemons() async {
-    await _performFetchPokemons();
+  @override
+  void onClose() {
+    _debounce?.cancel();
+    super.onClose();
   }
 
-  Future<void> _performFetchPokemons() async {
-    final response = await repository.fetchPokemons();
+  Future<void> fetchPokemons() async {
+    offset = 0;
+    pokemons.clear();
+    await loadMorePokemons();
+  }
+
+  Future<void> loadMorePokemons() async {
+    if (isLoading.value) return;
+    isLoading.value = true;
+    final response = await repository.fetchPokemons(offset: offset);
+    pokemons.addAll(response);
+    offset += response.length;
+    isLoading.value = false;
+  }
+
+  Future<void> getPokemonByAbility(String ability) async {
+    final response = await repository.fetchPokemonByAbility(ability);
     pokemons.assignAll(response);
   }
 
-  Future<void> searchPokemons(String name) async {
-    final filteredPokemons = pokemons
-        .where((pokemon) => pokemon.name.toLowerCase().contains(name))
-        .toList();
-    pokemons.assignAll(filteredPokemons);
+  Future<void> getPokemonByType(String type) async {
+    final response = await repository.fetchPokemonByType(type);
+    pokemons.assignAll(response);
+  }
+
+  void searchPokemons(String name) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      if (name.isEmpty) {
+        await fetchPokemons();
+        return;
+      }
+
+      final filteredPokemons = pokemons
+          .where(
+            (pokemon) => pokemon.name.toLowerCase().contains(
+                  name.toLowerCase(),
+                ),
+          )
+          .toList();
+      pokemons.assignAll(filteredPokemons);
+    });
   }
 }
