@@ -15,7 +15,7 @@ A Very Good Project created by Very Good CLI.
 [Level 1] - Pokemon card listing: image + name ✅
 [Level 1] - Detail screen: image + name + height + weight ✅
 
-[Level 2] - Cache API responses (Hive) ✅
+[Level 2] - Cache API responses ✅
 [Level 2] - Search by name with debounce ✅
 [Level 2] - Detail show types & abilities ✅
 
