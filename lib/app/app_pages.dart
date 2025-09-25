@@ -1,8 +1,10 @@
-import 'package:get/get.dart';
+import 'package:get/get_navigation/src/routes/get_route.dart';
 
 import 'app_routes.dart';
 import 'view/detail_pokemon_binding.dart';
 import 'view/detail_pokemon_page.dart';
+import 'view/filtered_list_pokemon_binding.dart';
+import 'view/filtered_list_pokemon_page.dart';
 import 'view/list_pokemon_binding.dart';
 import 'view/list_pokemon_page.dart';
 
@@ -19,6 +21,11 @@ class AppPages {
       name: Routes.detail,
       page: () => const DetailPokemonPage(),
       binding: DetailPokemonBinding(),
+    ),
+    GetPage<void>(
+      name: Routes.filteredList,
+      page: () => const FilteredListPokemonPage(),
+      binding: FilteredListPokemonBinding(),
     ),
   ];
 }
