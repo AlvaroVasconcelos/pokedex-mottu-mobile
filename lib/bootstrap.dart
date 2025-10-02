@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:mottu/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'app/data/cache/shared_prefs_cache_store.dart';
 import 'app/data/connectivity_service.dart';
 import 'app/data/i_pokemon_repository.dart';
 import 'app/data/pokemon_repository.dart';
@@ -26,7 +27,6 @@ class _AppLifecycleObserver extends WidgetsBindingObserver {
   }
 }
 
-
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -40,8 +40,14 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   Get
     ..put(initHttpClient())
+    ..put(const SharedPrefsCacheStore())
     ..put(ConnectivityService())
-    ..put<IPokemonRepository>(PokemonRepository(Get.find<Dio>()));
+    ..put<IPokemonRepository>(
+      PokemonRepository(
+        Get.find<Dio>(),
+        Get.find<SharedPrefsCacheStore>(),
+      ),
+    );
   final observer = _AppLifecycleObserver();
   WidgetsBinding.instance.addObserver(observer);
   runApp(await builder());

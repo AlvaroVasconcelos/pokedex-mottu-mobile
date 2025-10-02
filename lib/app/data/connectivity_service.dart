@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 class ConnectivityService {
-
   ConnectivityService() {
     _channel.setMethodCallHandler(_handleMethod);
   }

@@ -57,9 +57,7 @@ void main() {
       expect(controller.pokemons, fakePokemons);
     });
 
-    test(
-        'Should pokemons correctly when getPokemonByType is called',
-        () async {
+    test('Should pokemons correctly when getPokemonByType is called', () async {
       final fakePokemons = [PokemonModel(name: 'Charmander', url: '')];
 
       when(() => repository.fetchPokemonByType('fire'))
@@ -77,8 +75,7 @@ void main() {
       verify(() => repository.fetchPokemonByType('fire')).called(1);
     });
 
-    test(
-        'Should pokemons correctly when getPokemonByAbility is called',
+    test('Should pokemons correctly when getPokemonByAbility is called',
         () async {
       final fakePokemons = [PokemonModel(name: 'Gengar', url: '')];
 

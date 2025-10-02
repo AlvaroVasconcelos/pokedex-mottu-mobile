@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import 'cache/cache_store.dart';
 import 'i_pokemon_repository.dart';
 import 'pokemon_adapter.dart';
 import 'pokemon_detail_adapter.dart';
@@ -11,10 +11,9 @@ import 'pokemon_detail_model.dart';
 import 'pokemon_model.dart';
 
 class PokemonRepository implements IPokemonRepository {
-  PokemonRepository(this._httpClient);
+  PokemonRepository(this._httpClient, this._cacheStore);
   final Dio _httpClient;
-
-  Future<SharedPreferences> get _prefs async => SharedPreferences.getInstance();
+  final CacheStore _cacheStore;
 
   String _cacheKeyPokemons(int offset, int limit) =>
       'pokemons_${offset}_$limit';
@@ -28,11 +27,10 @@ class PokemonRepository implements IPokemonRepository {
     int offset = 0,
     int limit = 20,
   }) async {
-    final prefs = await _prefs;
     final cacheKey = _cacheKeyPokemons(offset, limit);
 
     try {
-      final cachedData = prefs.getString(cacheKey);
+      final cachedData = await _cacheStore.read(cacheKey);
       if (cachedData != null) {
         final decoded = jsonDecode(cachedData) as List<dynamic>;
         return PokemonAdapter.fromList(decoded);
@@ -47,7 +45,7 @@ class PokemonRepository implements IPokemonRepository {
       final pokemons =
           PokemonAdapter.fromList(data['results'] as List<dynamic>);
 
-      await prefs.setString(cacheKey, jsonEncode(data['results']));
+      await _cacheStore.write(cacheKey, jsonEncode(data['results']));
 
       return pokemons;
     } on DioException catch (error, stackTrace) {
@@ -64,11 +62,10 @@ class PokemonRepository implements IPokemonRepository {
 
   @override
   Future<PokemonDetailModel> fetchPokemonDetail(String name) async {
-    final prefs = await _prefs;
     final cacheKey = _cacheKeyDetail(name);
 
     try {
-      final cachedData = prefs.getString(cacheKey);
+      final cachedData = await _cacheStore.read(cacheKey);
       if (cachedData != null) {
         return PokemonDetailAdapter.fromMap(
           jsonDecode(cachedData) as Map<String, dynamic>,
@@ -77,7 +74,7 @@ class PokemonRepository implements IPokemonRepository {
 
       final response = await _httpClient.get('/pokemon/$name');
       final map = response.data as Map<String, dynamic>;
-      await prefs.setString(cacheKey, jsonEncode(map));
+      await _cacheStore.write(cacheKey, jsonEncode(map));
 
       return PokemonDetailAdapter.fromMap(map);
     } on DioException catch (error, stackTrace) {
@@ -98,11 +95,10 @@ class PokemonRepository implements IPokemonRepository {
     int offset = 0,
     int limit = 20,
   }) async {
-    final prefs = await _prefs;
     final cacheKey = _cacheKeyType(type, offset, limit);
 
     try {
-      final cachedData = prefs.getString(cacheKey);
+      final cachedData = await _cacheStore.read(cacheKey);
       if (cachedData != null) {
         final decoded = jsonDecode(cachedData) as List<dynamic>;
         return PokemonAdapter.fromList(decoded);
@@ -114,7 +110,7 @@ class PokemonRepository implements IPokemonRepository {
       );
 
       final data = response.data['pokemon'] as List<dynamic>;
-      await prefs.setString(cacheKey, jsonEncode(data));
+      await _cacheStore.write(cacheKey, jsonEncode(data));
 
       return PokemonAdapter.fromList(data);
     } catch (e, s) {
@@ -125,11 +121,10 @@ class PokemonRepository implements IPokemonRepository {
 
   @override
   Future<List<PokemonModel>> fetchPokemonByAbility(String ability) async {
-    final prefs = await _prefs;
     final cacheKey = _cacheKeyAbility(ability);
 
     try {
-      final cachedData = prefs.getString(cacheKey);
+      final cachedData = await _cacheStore.read(cacheKey);
       if (cachedData != null) {
         final decoded = jsonDecode(cachedData) as List<dynamic>;
         final pokemonList = decoded.map((e) => e['pokemon']).toList();
@@ -138,7 +133,7 @@ class PokemonRepository implements IPokemonRepository {
 
       final response = await _httpClient.get('/ability/$ability');
       final data = response.data['pokemon'] as List<dynamic>;
-      await prefs.setString(cacheKey, jsonEncode(data));
+      await _cacheStore.write(cacheKey, jsonEncode(data));
 
       final pokemonList = data.map((e) => e['pokemon']).toList();
       return PokemonAdapter.fromList(pokemonList);

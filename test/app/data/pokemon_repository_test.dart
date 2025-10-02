@@ -1,21 +1,28 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:mottu/app/data/cache/cache_store.dart';
 import 'package:mottu/app/data/i_pokemon_repository.dart';
 import 'package:mottu/app/data/pokemon_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MockDio extends Mock implements Dio {}
 
+class MockCacheStore extends Mock implements CacheStore {}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late IPokemonRepository sut;
-  late MockDio dio;
+  late Dio dio;
+  late CacheStore cacheStore;
 
   setUp(() {
     dio = MockDio();
-    sut = PokemonRepository(dio);
+    cacheStore = MockCacheStore();
+    sut = PokemonRepository(dio, cacheStore);
     SharedPreferences.setMockInitialValues({});
+    when(() => cacheStore.read(any())).thenAnswer((_) async => null);
+    when(() => cacheStore.write(any(), any())).thenAnswer((_) async {});
   });
 
   group('PokemonRepository', () {
